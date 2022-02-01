@@ -2,9 +2,12 @@ const { response } = require('express')
 const express = require('express')
 const app = express()
 var morgan = require('morgan')
+const cors = require('cors')
 
 app.use(express.json())
 app.use(morgan('tiny'))
+app.use(cors())
+
 
 let persons = [
     {
@@ -67,7 +70,7 @@ const generateID = () => {
 }
 app.post('/api/persons', (request, response) => {
     const body = request.body
-
+    console.log(body)
     if (!body.name) {
         return response.status(400).json({
             error: 'name missing'
@@ -94,7 +97,7 @@ app.post('/api/persons', (request, response) => {
     response.json(person)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
