@@ -1,3 +1,4 @@
+const { process_params } = require('express/lib/router')
 const mongoose = require('mongoose')
 
 const url = process.env.MONGODB_URI
@@ -12,8 +13,20 @@ mongoose.connect(url)
     })
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type: String,
+        minlength: 3,
+    },
+    number: {
+        type: String,
+        minlength: 8,
+        validate: {
+            validator: function(n) {
+                return /^(\d{2,3}-\d+)$/.test(n);
+            },
+            message: props => `Give number in form xx-xxxx or xxx-xxxx`
+        }
+    }
 })
 
 personSchema.set('toJSON', {
